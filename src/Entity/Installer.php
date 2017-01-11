@@ -7,14 +7,15 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-namespace zaboy\install\async\Entity;
+namespace rollun\promise\Entity;
 
+use Composer\IO\IOInterface;
 use Interop\Container\ContainerInterface;
-use zaboy\AbstractInstaller;
+use rollun\installer\Install\InstallerAbstract;
 use Zend\Db\Adapter\AdapterInterface;
-use zaboy\rest\TableGateway\TableManagerMysql as TableManager;
+use rollun\datastore\TableGateway\TableManagerMysql as TableManager;
 use rollun\promise\Entity\Store as EntityStore;
-use zaboy\res\Di\InsideConstruct;
+use rollun\dic\InsideConstruct;
 
 /**
  * Installer class
@@ -22,7 +23,7 @@ use zaboy\res\Di\InsideConstruct;
  * @category   Zaboy
  * @package    zaboy
  */
-class Installer extends AbstractInstaller
+class Installer extends InstallerAbstract
 {
 
     /**
@@ -31,9 +32,9 @@ class Installer extends AbstractInstaller
      */
     private $entityDbAdapter;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, IOInterface $ioComposer)
     {
-        parent::__construct($container);
+        parent::__construct($container, $ioComposer);
         $this->entityDbAdapter = $this->container->get('entityDbAdapter');
     }
 

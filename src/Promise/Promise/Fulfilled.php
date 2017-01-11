@@ -17,7 +17,7 @@ use rollun\promise\Entity\Entity;
 use rollun\promise\Promise\Exception\AlreadyRejectedException;
 use rollun\promise\Promise\Exception\AlreadyFulfilledException;
 use rollun\promise\Promise\PromiseInterface;
-use zaboy\utils\Json\Serializer as JsonSerializer;
+use rollun\utils\Json\Serializer as JsonSerializer;
 
 /**
  * FulfilledPromise

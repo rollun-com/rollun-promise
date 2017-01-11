@@ -7,14 +7,14 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-namespace zaboy\install\async\Promise;
+namespace rolun\promise\Promise;
 
 use Interop\Container\ContainerInterface;
-use zaboy\AbstractInstaller;
+use rollun\AbstractInstaller;
 use Zend\Db\Adapter\AdapterInterface;
-use zaboy\rest\TableGateway\TableManagerMysql as TableManager;
+use rollun\datastore\TableGateway\TableManagerMysql as TableManager;
 use rollun\promise\Promise\Store as PromiseStore;
-use zaboy\res\Di\InsideConstruct;
+use rollun\dic\InsideConstruct;
 
 /**
  * Installer class

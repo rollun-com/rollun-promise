@@ -4,7 +4,7 @@ namespace rollun\test\promise\Promise\Fulfilled;
 
 use rollun\promise\Promise\Promise;
 use rollun\promise\Promise\PromiseInterface;
-use zaboy\res\Di\InsideConstruct;
+use rollun\dic\InsideConstruct;
 use rollun\test\promise\Promise\DataProvider;
 use rollun\promise\Promise\Exception\AlreadyRejectedException;
 use rollun\promise\Promise\Exception\AlreadyFulfilledException;

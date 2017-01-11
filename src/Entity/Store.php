@@ -6,9 +6,9 @@ use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql;
-use zaboy\rest\TableGateway\TableManagerMysql as TableManager;
-use zaboy\res\Di\InsideConstruct;
-use zaboy\rest\DataStore\Interfaces\ReadInterface;
+use rollun\datastore\TableGateway\TableManagerMysql as TableManager;
+use rollun\dic\InsideConstruct;
+use rollun\datastore\DataStore\Interfaces\ReadInterface;
 
 /**
  * Store
@@ -37,7 +37,7 @@ class Store extends TableGateway
     public function __construct(AdapterInterface $entityDbAdapter = null)
     {
         //set $this->entityDbAdapter as $cotainer->get('entityDbAdapter');
-        $services = InsideConstruct::initServices(['entityDbAdapter']);
+        $services = InsideConstruct::setConstructParams();
         $adapter = $services['entityDbAdapter'];
         $table = static::TABLE_NAME;
         $this->isInTransaction = false;

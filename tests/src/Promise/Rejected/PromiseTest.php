@@ -6,7 +6,7 @@ use rollun\promise\Promise\Promise;
 use rollun\promise\Promise\PromiseInterface;
 use rollun\promise\Promise\Exception as PromiseException;
 use rollun\promise\Promise\Exception\AlreadyRejectedException;
-use zaboy\res\Di\InsideConstruct;
+use rollun\dic\InsideConstruct;
 use rollun\test\promise\Promise\DataProvider;
 
 /**
