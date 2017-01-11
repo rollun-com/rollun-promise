@@ -3,8 +3,10 @@
 namespace rollun\promise\Entity;
 
 use Zend\Db\Adapter\AdapterInterface;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\Db\TableGateway\Feature\FeatureSet;
 use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Select;
 use Zend\Db\Sql;
 use rollun\datastore\TableGateway\TableManagerMysql as TableManager;
 use rollun\dic\InsideConstruct;
@@ -16,7 +18,7 @@ use rollun\datastore\DataStore\Interfaces\ReadInterface;
  * @category   async
  * @package    zaboy
  */
-class Store extends TableGateway
+class Store extends AbstractTableGateway
 {
 
     const TABLE_NAME = 'entity';
@@ -34,14 +36,24 @@ class Store extends TableGateway
      */
     protected $isInTransaction;
 
+    protected function setEntityDbAdapter(AdapterInterface $entityDbAdapter)
+    {
+        $this->adapter = $entityDbAdapter;
+    }
+
     public function __construct(AdapterInterface $entityDbAdapter = null)
     {
         //set $this->entityDbAdapter as $cotainer->get('entityDbAdapter');
-        $services = InsideConstruct::setConstructParams();
-        $adapter = $services['entityDbAdapter'];
-        $table = static::TABLE_NAME;
+        InsideConstruct::setConstructParams();
+
         $this->isInTransaction = false;
-        parent::__construct($table, $adapter);
+        $this->table = static::TABLE_NAME;
+        $this->featureSet = new FeatureSet();
+        $this->resultSetPrototype = new ResultSet();
+        // Sql object (factory for select, insert, update, delete)
+        $this->sql = new Sql\Sql($this->adapter, $this->table);
+
+        $this->initialize();
     }
 
     public function beginTransaction()
@@ -80,7 +92,7 @@ class Store extends TableGateway
     {
         $identifier = self::ID;
         $db = $this->getAdapter();
-        $queryStr = 'SELECT ' . Select::SQL_STAR
+        $queryStr = 'SELECT ' . Sql\Select::SQL_STAR
                 . ' FROM ' . $db->platform->quoteIdentifier($this->getTable())
                 . ' WHERE ' . $db->platform->quoteIdentifier($identifier) . ' = ?';
         $queryStr = $this->isInTransaction ? $queryStr . ' FOR UPDATE' : $queryStr;

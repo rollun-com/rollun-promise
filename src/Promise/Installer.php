@@ -7,14 +7,14 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-namespace rolun\promise\Promise;
+namespace rollun\promise\Promise;
 
+use Composer\IO\IOInterface;
 use Interop\Container\ContainerInterface;
-use rollun\AbstractInstaller;
+use rollun\installer\Install\InstallerAbstract;
 use Zend\Db\Adapter\AdapterInterface;
 use rollun\datastore\TableGateway\TableManagerMysql as TableManager;
 use rollun\promise\Promise\Store as PromiseStore;
-use rollun\dic\InsideConstruct;
 
 /**
  * Installer class
@@ -22,7 +22,7 @@ use rollun\dic\InsideConstruct;
  * @category   Zaboy
  * @package    zaboy
  */
-class Installer extends AbstractInstaller
+class Installer extends InstallerAbstract
 {
 
     /**
@@ -31,9 +31,9 @@ class Installer extends AbstractInstaller
      */
     private $promiseDbAdapter;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, IOInterface $ioComposer)
     {
-        parent::__construct($container);
+        parent::__construct($container, $ioComposer);
         $this->promiseDbAdapter = $this->container->get('promiseDbAdapter');
     }
 

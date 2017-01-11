@@ -7,6 +7,7 @@ use rollun\dic\InsideConstruct;
 use rollun\promise\Entity\Store as EntityStore;
 use rollun\utils\Php\Serializer as PhpSerializer;
 use rollun\utils\Json\Serializer as JsonSerializer;
+use Zend\Db\Sql\Sql;
 
 /**
  * Store
@@ -31,9 +32,9 @@ class Store extends EntityStore
     public function __construct(AdapterInterface $promiseDbAdapter = null)
     {
         //set as $cotainer->get('promiseDbAdapter');
-        $services = InsideConstruct::setConstructParams();
-        $adapter = $services['promiseDbAdapter'];
-        parent::__construct($adapter);
+        InsideConstruct::init(['promiseDbAdapter' => 'entityDbAdapter']);
+        $this->table = static::TABLE_NAME;
+        $this->sql = new Sql($this->adapter, $this->table);
     }
 
     protected function prepareData(array $data, $fild = null)
