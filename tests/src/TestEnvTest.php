@@ -6,7 +6,7 @@
  * Time: 1:57 PM
  */
 
-namespace zaboy\test\skeleton;
+namespace rollun\test\promise;
 
 
 class TestEnvTest extends \PHPUnit_Framework_TestCase
