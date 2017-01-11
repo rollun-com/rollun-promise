@@ -33,8 +33,6 @@ class Store extends EntityStore
     {
         //set as $cotainer->get('promiseDbAdapter');
         InsideConstruct::init(['promiseDbAdapter' => 'entityDbAdapter']);
-        $this->table = static::TABLE_NAME;
-        $this->sql = new Sql($this->adapter, $this->table);
     }
 
     protected function prepareData(array $data, $fild = null)
