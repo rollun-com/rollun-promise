@@ -9,6 +9,7 @@
 
 namespace rollun\promise\Promise\Promise;
 
+use rollun\logger\Exception\LoggedException;
 use rollun\promise\Promise\Promise;
 use rollun\promise\Promise\Store as PromiseStore;
 use rollun\promise\Promise\Promise\Fulfilled as FulfilledPromise;
@@ -77,7 +78,7 @@ class Pending extends Entity implements PromiseInterface
                 $this[PromiseStore::RESULT] = $value->wait(false);
                 return new RejectedPromise($this->getData());
             default:
-                throw new \RuntimeException('Wrong state: ' . $state . '. ID = ' . $this->getId());
+                throw new LoggedException('Wrong state: ' . $state . '. ID = ' . $this->getId());
         }
     }
 

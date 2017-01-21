@@ -73,7 +73,7 @@ class Store extends AbstractTableGateway
             $db->getDriver()->getConnection()->commit();
             $this->isInTransaction = false;
         } else {
-            throw new \LogicException('Commit without Transaction');
+            throw new LoggedException('Commit without Transaction');
         }
     }
 
@@ -84,7 +84,7 @@ class Store extends AbstractTableGateway
             $db->getDriver()->getConnection()->rollback();
             $this->isInTransaction = false;
         } else {
-            throw new \LogicException('Rollback without Transaction');
+            throw new LoggedException('Rollback without Transaction');
         }
     }
 
@@ -135,7 +135,7 @@ class Store extends AbstractTableGateway
             return [$fild => $data[$fild]];
         }
         if (isset($fild)) {
-            throw new \RuntimeException('Can not prepare fild' . $fild);
+            throw new LoggedException('Can not prepare fild' . $fild);
         }
         foreach ($data as $key => $value) {
             $preparedFild = $this->prepareData($data, $key); //['columnName => serializedValue]
@@ -152,7 +152,7 @@ class Store extends AbstractTableGateway
             return [$columnName => $data[$columnName]];
         }
         if (isset($columnName)) {
-            throw new \RuntimeException('Can not restore column ' . $columnName);
+            throw new LoggedException('Can not restore column ' . $columnName);
         }
         foreach ($data as $key => $value) {
             $restoredFild = $this->restoreData($data, $key); //['fildName' => serializedValue]

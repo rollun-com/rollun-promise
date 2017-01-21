@@ -9,6 +9,7 @@
 
 namespace rollun\promise\Promise;
 
+use rollun\logger\Exception\LoggedException;
 use rollun\promise\Entity\Client;
 use rollun\promise\Promise\Store as PromiseStore;
 use rollun\promise\Promise\PromiseInterface;
@@ -125,7 +126,7 @@ class Promise extends Client implements PromiseInterface
                     $this->store->commit();
                     return $this->getId();
                 default:
-                    throw new \LogicException('Wrong type of result ' . $resultType);
+                    throw new LoggedException('Wrong type of result ' . $resultType);
             }
         } catch (PromiseException $exc) {
             $this->store->rollback();
@@ -137,7 +138,7 @@ class Promise extends Client implements PromiseInterface
             $reason = 'Error while method  ' . $methodName . ' is running.' . PHP_EOL .
                     'Reason: ' . $exc->getMessage() . PHP_EOL .
                     ' Id: ' . $this->id;
-            throw new \RuntimeException($reason, 0, $exc);
+            throw new LoggedException($reason, 0, $exc);
         }
         if ($stateBefore === PromiseInterface::PENDING && $stateAfter !== PromiseInterface::PENDING) {
             $this->resolveDependent();
@@ -160,7 +161,7 @@ class Promise extends Client implements PromiseInterface
             try {
                 $dependentPromise->resolve($this);
             } catch (\Exception $exc) {
-                throw new \RuntimeException(
+                throw new LoggedException(
                 'Cannot resolve dependent Promise. ID: ' . $dependentPromiseId
                 , 0, $exc);
             }

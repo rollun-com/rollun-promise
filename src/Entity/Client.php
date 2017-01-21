@@ -9,6 +9,7 @@
 
 namespace rollun\promise\Entity;
 
+use rollun\logger\Exception\LoggedException;
 use rollun\promise\Entity\Store as EntityStore;
 use rollun\promise\Entity\Base;
 use rollun\promise\Entity\Entity;
@@ -58,7 +59,7 @@ class Client extends Base
             $this->id = $entity->getId();
             return;
         }
-        throw new \LogicException('Wrong format of specified data');
+        throw new LoggedException('Wrong format of specified data');
     }
 
     public static function getInstance($data = [])
@@ -86,10 +87,10 @@ class Client extends Base
             $data = $entity->getData();
             $rowsCount = $this->store->insert($data); //This data may be serialized for DB in Store
             if (!$rowsCount) {
-                throw new \RuntimeException('Any records was inserted.');
+                throw new LoggedException('Any records was inserted.');
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException('Can\'t insert Entity. Entity id: ' . $entity->getId(), 0, $e);
+            throw new LoggedException('Can\'t insert Entity. Entity id: ' . $entity->getId(), 0, $e);
         }
         return $entity;
     }
@@ -98,19 +99,19 @@ class Client extends Base
      *
      * @param string $id
      * @return \rollun\promise\Entity\Entity
-     * @throws \RuntimeException
+     * @throws LoggedException
      */
     protected function getEntity($id = null)
     {
         $id = is_null($id) ? $this->getId() : $id;
         if (!$this->isId($id)) {
-            throw new \RuntimeException(
+            throw new LoggedException(
             "There is not correct id: $id"
             );
         }
         $data = $this->store->read($id);
         if (empty($data)) {
-            throw new \RuntimeException(
+            throw new LoggedException(
             "There is no data in the store for id: $id"
             );
         }
@@ -123,7 +124,7 @@ class Client extends Base
     {
         $id = is_null($id) ? $this->getId() : $id;
         if (!$this->isId($id)) {
-            throw new \RuntimeException(
+            throw new LoggedException(
             "There is not correct id: $id"
             );
         }
@@ -170,14 +171,14 @@ class Client extends Base
                     $id = $this->getId();
                     $this->store->commit();
                 default:
-                    throw new \LogicException('Wrong type of result ' . $resultType);
+                    throw new LoggedException('Wrong type of result ' . $resultType);
             }
         } catch (\Exception $exc) {
             $this->store->rollback();
             $reason = 'Error while method  ' . $methodName . ' is running.' . PHP_EOL .
                     'Reason: ' . $exc->getMessage() . PHP_EOL .
                     ' Id: ' . $this->getId();
-            throw new \RuntimeException($reason, 0, $exc);
+            throw new LoggedException($reason, 0, $exc);
         }
         return $id;
     }
