@@ -9,6 +9,7 @@
 
 namespace rollun\promise\Promise\Promise;
 
+use rollun\logger\Exception\LoggedException;
 use rollun\promise\Promise\Store as PromiseStore;
 use rollun\promise\Promise\Promise\Pending as PendingPromise;
 use rollun\promise\Promise\PromiseInterface;
@@ -33,7 +34,7 @@ class Dependent extends PendingPromise
     {
         parent::__construct($data);
         if (!(isset($data[PromiseStore::PARENT_ID]) && $this->isId($data[PromiseStore::PARENT_ID]))) {
-            throw new \RuntimeException('Wromg PARENT_ID. ID = ' . $this->getId());
+            throw new LoggedException('Wromg PARENT_ID. ID = ' . $this->getId());
         }
         $this[PromiseStore::STATE] = PromiseInterface::PENDING;
         $this[PromiseStore::PARENT_ID] = $data[PromiseStore::PARENT_ID];
@@ -44,7 +45,7 @@ class Dependent extends PendingPromise
         $onRrejecedError = !(is_null($this[PromiseStore::ON_REJECTED]) || is_callable($this[PromiseStore::ON_REJECTED]));
         if ($onFulfilledError || $onRrejecedError) {
             throw new \UnexpectedValueException(
-            ($onFulfilledError ? 'ON_FULFILLED' : 'ON_REJECTED') . ' must be coallable'
+                ($onFulfilledError ? 'ON_FULFILLED' : 'ON_REJECTED') . ' must be coallable'
             );
         }
     }
@@ -53,7 +54,7 @@ class Dependent extends PendingPromise
     {
         if (!(is_object($value) && $value instanceof PromiseInterface && $value->getId() === $this[PromiseStore::PARENT_ID])) {
             throw new AlreadyResolvedException(
-            'You can resolve dependent promise only by its master promise'
+                'You can resolve dependent promise only by its master promise'
             );
         } else {
             $slavePromise = $value;
@@ -106,7 +107,7 @@ class Dependent extends PendingPromise
             return parent::reject($reason);
         }
         throw new AlreadyResolvedException(
-        'You can resolve dependent promise only by its master promise'
+            'You can resolve dependent promise only by its master promise'
         );
     }
 

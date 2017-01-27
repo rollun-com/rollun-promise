@@ -51,7 +51,7 @@ interface PromiseInterface
      * Resolve the promise with the given value.
      *
      * @param mixed $value
-     * @throws \RuntimeException if the promise is already resolved.
+     * @throws LoggedException if the promise is already resolved.
      */
     public function resolve($value);
 
@@ -59,7 +59,7 @@ interface PromiseInterface
      * Reject the promise with the given reason.
      *
      * @param mixed $reason
-     * @throws \RuntimeException if the promise is already resolved.
+     * @throws LoggedException if the promise is already resolved.
      */
     public function reject($reason);
 

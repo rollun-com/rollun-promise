@@ -9,13 +9,9 @@
 
 namespace rollun\promise\Promise;
 
-/**
- * Exception class
- *
- * @category   async
- * @package    zaboy
- */
-class Exception extends \Exception
+use rollun\logger\Exception\LoggedException;
+
+class Exception extends LoggedException
 {
 
 }

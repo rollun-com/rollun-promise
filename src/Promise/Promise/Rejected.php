@@ -9,6 +9,7 @@
 
 namespace rollun\promise\Promise\Promise;
 
+use rollun\logger\Exception\LoggedException;
 use rollun\promise\Promise\Store as PromiseStore;
 use rollun\promise\Promise\Exception\AlreadyRejectedException;
 use rollun\promise\Promise\Promise\Pending as PendingPromise;
@@ -30,10 +31,10 @@ class Rejected extends PendingPromise
     {
         parent::__construct($data);
         if (!array_key_exists(PromiseStore::RESULT, $data)) {
-            throw new \RuntimeException('REJECT reason  must be retriveed. ID = ' . $this->getId());
+            throw new LoggedException('REJECT reason  must be retriveed. ID = ' . $this->getId());
         }
         if (!$data[PromiseStore::RESULT] instanceof \Exception) {
-            throw new \RuntimeException('RESULT type must be an exception. ID = ' . $this->getId());
+            throw new LoggedException('RESULT type must be an exception. ID = ' . $this->getId());
         }
         $this[PromiseStore::RESULT] = $data[PromiseStore::RESULT];
         $this[PromiseStore::STATE] = PromiseInterface::REJECTED;

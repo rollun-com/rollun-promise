@@ -50,7 +50,7 @@ class Entity extends Base implements \ArrayAccess
         if (isset($data[EntityStore::ID])) {
             return $data[EntityStore::ID];
         } else {
-            throw new \LogicException(
+            throw new LoggedException(
             "ID is not set."
             );
         }
@@ -65,7 +65,7 @@ class Entity extends Base implements \ArrayAccess
     public function getData()
     {
         if (!isset($this->data)) {
-            throw new \RuntimeException(
+            throw new LoggedException(
             "Data is not set."
             );
         }
@@ -81,7 +81,7 @@ class Entity extends Base implements \ArrayAccess
     protected function setData($data)
     {
         if (!(is_array($data) && isset($data[EntityStore::ID]) && $this->isId($data[EntityStore::ID]))) {
-            throw new \RuntimeException(
+            throw new LoggedException(
             "Wrong data. \$data must be an array with 'id' key."
             );
         }
@@ -114,7 +114,7 @@ class Entity extends Base implements \ArrayAccess
         if (array_key_exists($offset, $this->data)) {
             return $this->data[$offset];
         }
-        throw new \RuntimeException(
+        throw new LoggedException(
         'Key "' . $offset . '" is not exist in $thiis->data array'
         );
     }

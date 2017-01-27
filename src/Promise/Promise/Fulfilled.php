@@ -9,6 +9,7 @@
 
 namespace rollun\promise\Promise\Promise;
 
+use rollun\logger\Exception\LoggedException;
 use rollun\promise\Promise\Store as PromiseStore;
 use rollun\promise\Promise\Promise\Pending as PendingPromise;
 use rollun\promise\Promise\Promise\Rejected as RejectedPromise;
@@ -36,12 +37,12 @@ class Fulfilled extends PendingPromise
     {
         parent::__construct($data);
         if (!array_key_exists(PromiseStore::RESULT, $data)) {
-            throw new \RuntimeException('Wromg RESULT type - promise. ID = ' . $this->getId());
+            throw new LoggedException('Wromg RESULT type - promise. ID = ' . $this->getId());
         }
         $result = $data[PromiseStore::RESULT];
 
         if (is_object($result) && $result instanceof PromiseInterface) {
-            throw new \RuntimeException('Can not fullfill without result value. ID = ' . $this->getId());
+            throw new LoggedException('Can not fullfill without result value. ID = ' . $this->getId());
         }
         $this[PromiseStore::RESULT] = $result;
         $this[PromiseStore::STATE] = PromiseInterface::FULFILLED;
