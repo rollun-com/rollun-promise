@@ -59,45 +59,6 @@ class Promise extends Client implements PromiseInterface
         return $id;
     }
 
-    public function reject($value)
-    {
-        $id = $this->runTransaction('reject', [$value]);
-        return $id;
-    }
-
-    /**
-     * Returns the class name of Entity
-     *
-     * @return string
-     */
-    protected function getClass($data = null)
-    {
-        $namespace = '\\' . __NAMESPACE__ . '\\Promise\\';
-        switch (true) {
-            case empty($data) || !array_key_exists(PromiseStore::STATE, $data) ||
-            $data[PromiseStore::STATE] === PromiseInterface::PENDING &&
-            empty($data[PromiseStore::PARENT_ID]):
-                return $namespace . 'Pending';
-            case $data[PromiseStore::STATE] === PromiseInterface::FULFILLED:
-                return $namespace . 'Fulfilled';
-            case $data[PromiseStore::STATE] === PromiseInterface::REJECTED:
-                return $namespace . 'Rejected';
-            default:
-                return $namespace . 'Dependent';
-        }
-    }
-
-    public function getState($dependentAsPending = true)
-    {
-        return $this->getEntity()->getState($dependentAsPending);
-    }
-
-    public function then(callable $onFulfilled = null, callable $onRejected = null)
-    {
-        $id = $this->runTransaction('then', [ $onFulfilled, $onRejected]);
-        return static::getInstance($id);
-    }
-
     protected function runTransaction($methodName, $params = [])
     {
         try {
@@ -136,8 +97,8 @@ class Promise extends Client implements PromiseInterface
         } catch (\Exception $exc) {
             $this->store->rollback();
             $reason = 'Error while method  ' . $methodName . ' is running.' . PHP_EOL .
-                    'Reason: ' . $exc->getMessage() . PHP_EOL .
-                    ' Id: ' . $this->id;
+                'Reason: ' . $exc->getMessage() . PHP_EOL .
+                ' Id: ' . $this->id;
             throw new LoggedException($reason, 0, $exc);
         }
         if ($stateBefore === PromiseInterface::PENDING && $stateAfter !== PromiseInterface::PENDING) {
@@ -162,16 +123,57 @@ class Promise extends Client implements PromiseInterface
                 $dependentPromise->resolve($this);
             } catch (\Exception $exc) {
                 throw new LoggedException(
-                'Cannot resolve dependent Promise. ID: ' . $dependentPromiseId
-                , 0, $exc);
+                    'Cannot resolve dependent Promise. ID: ' . $dependentPromiseId,
+                    0,
+                    $exc
+                );
             }
         }
+    }
+
+    public function reject($value)
+    {
+        $id = $this->runTransaction('reject', [$value]);
+        return $id;
+    }
+
+    public function getState($dependentAsPending = true)
+    {
+        return $this->getEntity()->getState($dependentAsPending);
+    }
+
+    public function then(callable $onFulfilled = null, callable $onRejected = null)
+    {
+        $id = $this->runTransaction('then', [$onFulfilled, $onRejected]);
+        return static::getInstance($id);
     }
 
     public function __wakeup()
     {
         $this->store = new PromiseStore();
         static::$class = get_class($this);
+    }
+
+    /**
+     * Returns the class name of Entity
+     *
+     * @return string
+     */
+    protected function getClass($data = null)
+    {
+        $namespace = '\\' . __NAMESPACE__ . '\\Promise\\';
+        switch (true) {
+            case empty($data) || !array_key_exists(PromiseStore::STATE, $data) ||
+                $data[PromiseStore::STATE] === PromiseInterface::PENDING &&
+                empty($data[PromiseStore::PARENT_ID]):
+                return $namespace . 'Pending';
+            case $data[PromiseStore::STATE] === PromiseInterface::FULFILLED:
+                return $namespace . 'Fulfilled';
+            case $data[PromiseStore::STATE] === PromiseInterface::REJECTED:
+                return $namespace . 'Rejected';
+            default:
+                return $namespace . 'Dependent';
+        }
     }
 
 }

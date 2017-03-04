@@ -8,27 +8,17 @@
 
 use rollun\logger\Logger;
 use rollun\logger\LoggerFactory;
-use \rollun\logger\LogWriter\FileLogWriter;
-use \rollun\logger\LogWriter\FileLogWriterFactory;
-use \rollun\installer\Command;
-use \rollun\logger\Installer as LoggerInstaller;
+use rollun\logger\LogWriter\FileLogWriter;
+use rollun\logger\LogWriter\FileLogWriterFactory;
 
 return [
-    'logWriter' => [
-        FileLogWriter::class => [
-            FileLogWriterFactory::FILE_NAME_KEY =>
-                realpath(Command::getDataDir() . DIRECTORY_SEPARATOR .
-                    LoggerInstaller::LOGS_DIR . DIRECTORY_SEPARATOR . LoggerInstaller::LOGS_FILE)
-        ]
-    ],
     'services' => [
         'factories' => [
             FileLogWriter::class => FileLogWriterFactory::class,
             Logger::class => LoggerFactory::class,
         ],
         'aliases' => [
-            'logWriter' => FileLogWriter::class,
-            'logger' => Logger::class,
+            \rollun\logger\LogWriter\LogWriterInterface::DEFAULT_LOG_WRITER_SERVICE => FileLogWriter::class,
         ]
     ]
 ];

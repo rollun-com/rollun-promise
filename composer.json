@@ -24,7 +24,7 @@
     "zendframework/zend-db": "2.8.2",
     "opis/closure": "^2.1.0",
     "rollun-com/rollun-installer": "^1.0",
-    "rollun-com/rollun-datastore": "^2.0",
+    "rollun-com/rollun-datastore": "^2.3",
     "rollun-com/rollun-utils": "^1.0",
     "rollun-com/rollun-dic": "^1.0",
     "rollun-com/rollun-logger": "^1.0"
