@@ -32,13 +32,6 @@ class PromiseInstaller extends InstallerAbstract
      */
     private $promiseDbAdapter;
 
-    public function __construct(ContainerInterface $container, IOInterface $ioComposer)
-    {
-        parent::__construct($container, $ioComposer);
-        $this->promiseDbAdapter = $this->container->get('db');
-    }
-
-
     public function isInstall()
     {
         $config = $this->container->get('config');
@@ -47,6 +40,7 @@ class PromiseInstaller extends InstallerAbstract
 
     public function install()
     {
+        $this->promiseDbAdapter = $this->container->get('db');
         $tableManager = new TableManager($this->promiseDbAdapter);
         $tableConfig = $this->getTableConfig();
         $tableName = PromiseStore::TABLE_NAME;
@@ -115,6 +109,7 @@ class PromiseInstaller extends InstallerAbstract
      */
     public function uninstall()
     {
+        $this->promiseDbAdapter = $this->container->get('promiseDbAdapter');
         $tableManager = new TableManager($this->promiseDbAdapter);
         $tableName = PromiseStore::TABLE_NAME;
         $tableManager->deleteTable($tableName);

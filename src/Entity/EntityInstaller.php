@@ -33,12 +33,6 @@ class EntityInstaller extends InstallerAbstract
      */
     private $entityDbAdapter;
 
-    public function __construct(ContainerInterface $container, IOInterface $ioComposer)
-    {
-        parent::__construct($container, $ioComposer);
-        $this->entityDbAdapter = $this->container->get('db');
-    }
-
     public function isInstall()
     {
         $config = $this->container->get('config');
@@ -47,6 +41,7 @@ class EntityInstaller extends InstallerAbstract
 
     public function install()
     {
+        $this->entityDbAdapter = $this->container->get('db');
         $tableManager = new TableManager($this->entityDbAdapter);
         $tableConfig = $this->getTableConfig();
         $tableName = EntityStore::TABLE_NAME;
@@ -80,6 +75,7 @@ class EntityInstaller extends InstallerAbstract
      */
     public function uninstall()
     {
+        $this->entityDbAdapter = $this->container->get('entityDbAdapter');
         $tableManager = new TableManager($this->entityDbAdapter);
         $tableName = EntityStore::TABLE_NAME;
         $tableManager->deleteTable($tableName);
