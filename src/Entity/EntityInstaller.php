@@ -47,7 +47,7 @@ class EntityInstaller extends InstallerAbstract
         $tableName = EntityStore::TABLE_NAME;
         $tableManager->rewriteTable($tableName, $tableConfig);
         return [
-            'services' => [
+            'dependencies' => [
                 'aliases' => [
                     //this 'callback' is service name in url
                     'entityDbAdapter' => constant('APP_ENV') === 'production' ? 'db' : 'db',
