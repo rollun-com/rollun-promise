@@ -46,7 +46,7 @@ class PromiseInstaller extends InstallerAbstract
         $tableName = PromiseStore::TABLE_NAME;
         $tableManager->rewriteTable($tableName, $tableConfig);
         return [
-            'services' => [
+            'dependencies' => [
                 'aliases' => [
                     //this 'callback' is service name in url
                     'promiseDbAdapter' => constant('APP_ENV') === 'production' ? 'db' : 'db',
