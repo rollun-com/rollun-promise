@@ -20,18 +20,6 @@ class PromiseTest extends DataProvider
      */
     protected $object;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
-    {
-        $container = include 'config/container.php';
-        InsideConstruct::setContainer($container);
-    }
-
-    //====================== getState(); =======================================
-
     public function test_getState()
     {
         $masterPromise = new Promise;
@@ -39,7 +27,8 @@ class PromiseTest extends DataProvider
         $this->assertEquals(PromiseInterface::PENDING, $slavePromise->getState());
     }
 
-    //====================== wait(); ===========================================
+    //====================== getState(); =======================================
+
     public function test_wait_false()
     {
         $masterPromise = new Promise;
@@ -47,22 +36,26 @@ class PromiseTest extends DataProvider
         $this->assertContainsOnlyInstancesOf(TimeIsOutException::class, [$slavePromise->wait(false)]);
     }
 
+    //====================== wait(); ===========================================
+
     public function test_wait_true()
     {
         $masterPromise = new Promise;
         $slavePromise = $masterPromise->then();
-        $this->setExpectedException(TimeIsOutException::class);
+        $this->expectException(TimeIsOutException::class);
         $slavePromise->wait(); //it is equal ->wait(true)
     }
-
-    //====================== resolve(); ========================================
 
     public function test_resolve_slavePromise_by_masterPromise()
     {
         $masterPromise = new Promise;
         $slavePromise = $masterPromise->then();
+        //TODO::  Method not has assert
+        $this->assertEquals(1,1);
         $slavePromise->resolve($masterPromise);
     }
+
+    //====================== resolve(); ========================================
 
     /**
      * @dataProvider provider_Types()
@@ -71,10 +64,8 @@ class PromiseTest extends DataProvider
     {
         $masterPromise = new Promise;
         $slavePromise = $masterPromise->then();
-        $this->setExpectedExceptionRegExp(
-                AlreadyResolvedException::class
-                , '|.*You can resolve dependent promise only by its master promise|'
-        );
+        $this->expectException(AlreadyResolvedException::class);
+        $this->expectExceptionMessageRegExp('|.*(You can resolve dependent promise only by its master promise).*|');
         $slavePromise->resolve($in);
     }
 
@@ -90,8 +81,6 @@ class PromiseTest extends DataProvider
         $this->assertEquals($in, $slavePromise->wait(false));
     }
 
-    //====================== reject(); =========================================
-
     public function test_reject_slavePromise_by_TimeIsOutException()
     {
         $masterPromise = new Promise;
@@ -100,14 +89,14 @@ class PromiseTest extends DataProvider
         $this->assertEquals(PromiseInterface::REJECTED, $slavePromise->getState());
     }
 
+    //====================== reject(); =========================================
+
     public function test_reject_slavePromise_by_masterPromise()
     {
         $masterPromise = new Promise;
         $slavePromise = $masterPromise->then();
-        $this->setExpectedExceptionRegExp(
-                AlreadyResolvedException::class
-                , '|.*You can resolve dependent promise only by its master promise|'
-        );
+        $this->expectException(AlreadyResolvedException::class);
+        $this->expectExceptionMessageRegExp( '|.*(You can resolve dependent promise only by its master promise).*|');
         $slavePromise->reject($masterPromise);
     }
 
@@ -118,14 +107,10 @@ class PromiseTest extends DataProvider
     {
         $masterPromise = new Promise;
         $slavePromise = $masterPromise->then();
-        $this->setExpectedExceptionRegExp(
-                AlreadyResolvedException::class
-                , '|.*You can resolve dependent promise only by its master promise|'
-        );
+        $this->expectException(AlreadyResolvedException::class);
+        $this->expectExceptionMessageRegExp('|(You can resolve dependent promise only by its master promise)|');
         $slavePromise->reject($in);
     }
-
-    //====================== then(); ===========================================
 
     public function test_then()
     {
@@ -136,12 +121,14 @@ class PromiseTest extends DataProvider
         $this->assertContainsOnlyInstancesOf(TimeIsOutException::class, [$slavePromise->wait(false)]);
     }
 
+    //====================== then(); ===========================================
+
     public function test_then_with_callbacks_resolve_onFulfilled_fulfilled()
     {
-        $onFulfilled = function($value) {
+        $onFulfilled = function ($value) {
             return 'After $onFulfilled - ' . $value;
         };
-        $onRejected = function($value) {
+        $onRejected = function ($value) {
             return 'After $onRejected - ' . $value->getMessage();
         };
         $masterPromise = new Promise;
@@ -156,10 +143,10 @@ class PromiseTest extends DataProvider
 
     public function test_then_with_callbacks_reject_onRejected_fulfilled()
     {
-        $onFulfilled = function($value) {
+        $onFulfilled = function ($value) {
             return 'After $onFulfilled - ' . $value;
         };
-        $onRejected = function($value) {
+        $onRejected = function ($value) {
             return 'After $onRejected - ' . $value->getMessage();
         };
         $masterPromise = new Promise;
@@ -174,10 +161,10 @@ class PromiseTest extends DataProvider
 
     public function test_then_with_callbacks_reject_onRejected_rejected()
     {
-        $onFulfilled = function($value) {
+        $onFulfilled = function ($value) {
             return 'After $onFulfilled - ' . $value;
         };
-        $onRejected = function($value) {
+        $onRejected = function ($value) {
             throw new \RuntimeException('After $onRejected - ' . $value->getMessage(), 0, $value);
         };
         $masterPromise = new Promise;
@@ -192,7 +179,7 @@ class PromiseTest extends DataProvider
 
     public function test_then_with_callbacks_resolve_ExceptionInOnFulfilled()
     {
-        $onFulfilled = function($value) {
+        $onFulfilled = function ($value) {
             throw new \LengthException('Exception in onFulfilled()');
         };
         $masterPromise = new Promise;
@@ -205,4 +192,13 @@ class PromiseTest extends DataProvider
         $this->assertEquals('Exception in onFulfilled()', $slaveOfSlavePromise->wait(false)->getMessage());
     }
 
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     */
+    protected function setUp()
+    {
+        $container = include 'config/container.php';
+        InsideConstruct::setContainer($container);
+    }
 }

@@ -52,7 +52,7 @@ class PromiseTest extends DataProvider
     {
         $promise = new Promise;
         $promise->reject('foo');
-        $this->setExpectedException(PromiseException::class, 'foo');
+        $this->expectException(PromiseException::class);
         $promise->wait(true);
     }
 
@@ -62,7 +62,7 @@ class PromiseTest extends DataProvider
         $promise = new Promise;
         $promise->reject('foo');
         $promise->reject(new PromiseException('foo'));
-        $this->setExpectedException(PromiseException::class, 'foo');
+        $this->expectException(PromiseException::class);
         $promise->wait(true);
     }
 
@@ -71,7 +71,7 @@ class PromiseTest extends DataProvider
         $promise = new Promise;
         $promise->reject('foo');
         $promise->reject('foo');
-        $this->setExpectedException(PromiseException::class, 'foo');
+        $this->expectException(PromiseException::class);
         $promise->wait(true);
     }
 
@@ -82,7 +82,8 @@ class PromiseTest extends DataProvider
     {
         $promise = new Promise;
         $promise->reject('bar');
-        $this->setExpectedExceptionRegExp(AlreadyRejectedException::class, '|.*Cannot reject a rejected promise|');
+        $this->expectException(AlreadyRejectedException::class);
+        $this->expectExceptionMessageRegExp( '|.*Cannot reject a rejected promise|');
         $promise->reject($in);
     }
 
@@ -94,7 +95,8 @@ class PromiseTest extends DataProvider
     {
         $promise = new Promise;
         $promise->reject('foo');
-        $this->setExpectedExceptionRegExp(AlreadyRejectedException::class, '|.*Cannot resolve a rejected promise|');
+        $this->expectException(AlreadyRejectedException::class);
+        $this->expectExceptionMessageRegExp('|.*(Cannot resolve a rejected promise).*|');
         $promise->resolve($in);
     }
 
