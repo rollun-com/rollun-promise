@@ -48,7 +48,7 @@ class PromiseTest extends DataProvider
     public function test_wait_true()
     {
         $promise = new Promise;
-        $this->setExpectedException(TimeIsOutException::class);
+        $this->expectException(TimeIsOutException::class);
         $promise->wait();
     }
 
@@ -72,7 +72,7 @@ class PromiseTest extends DataProvider
         $this->assertStringStartsWith(
                 'foo', $promise->wait(false)->getMessage()
         );
-        $this->setExpectedException(PromiseException::class);
+        $this->expectException(PromiseException::class);
         $promise->wait();
     }
 
@@ -81,7 +81,7 @@ class PromiseTest extends DataProvider
         $promise = new Promise;
         $promise->reject(new \RuntimeException('foo'));
         $this->assertEquals(PromiseInterface::REJECTED, $promise->getState());
-        $this->setExpectedException(\RuntimeException::class, 'foo');
+        $this->expectException(\RuntimeException::class, 'foo');
         $promise->wait();
     }
 
@@ -92,7 +92,7 @@ class PromiseTest extends DataProvider
         $this->assertStringStartsWith(
                 'Reason cannot be converted to string.', $promise->wait(false)->getMessage()
         );
-        $this->setExpectedException(\UnexpectedValueException::class);
+        $this->expectException(\UnexpectedValueException::class);
         $promise->wait();
     }
 
@@ -105,7 +105,7 @@ class PromiseTest extends DataProvider
         $this->assertStringStartsWith(
                 'foo', $promise->wait(false)->getMessage()
         );
-        $this->setExpectedException(PromiseException::class);
+        $this->expectException(PromiseException::class);
         $promise->wait();
     }
 
@@ -118,7 +118,7 @@ class PromiseTest extends DataProvider
         $this->assertStringStartsWith(
                 'foo', $promise->wait(false)->getMessage()
         );
-        $this->setExpectedException(\LengthException::class);
+        $this->expectException(\LengthException::class);
         $promise->wait();
     }
 
@@ -130,7 +130,7 @@ class PromiseTest extends DataProvider
         $this->assertStringStartsWith(
                 'Reason is pending promise. ID = promise_', $promise->wait(false)->getMessage()
         );
-        $this->setExpectedException(PromiseException::class);
+        $this->expectException(PromiseException::class);
         $promise->wait();
     }
 

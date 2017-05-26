@@ -13,6 +13,7 @@ $cacheConfig = [
 $aggregator = new ConfigAggregator([
     // Include cache configuration
     new ArrayProvider($cacheConfig),
+    new \rollun\actionrender\ConfigProvider(),
 
     // Default App module config
 

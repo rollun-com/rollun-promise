@@ -82,7 +82,7 @@ class PromiseTest extends DataProvider
     {
         $promise = new Promise;
         $promise->reject('bar');
-        $this->setExpectedExceptionRegExp(AlreadyRejectedException::class, '|.*Cannot reject a rejected promise|');
+        $this->expectExceptionMessageRegExp('|.*Cannot reject a rejected promise|');
         $promise->reject($in);
     }
 

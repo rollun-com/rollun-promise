@@ -72,7 +72,8 @@ class PromiseTest extends DataProvider
     {
         $promise = new Promise;
         $promise->resolve('bar');
-        $this->setExpectedExceptionRegExp(AlreadyFulfilledException::class, '|.*Cannot resolve a fulfilled promise|');
+        $this->expectException(AlreadyFulfilledException::class);
+        $this->expectExceptionMessageRegExp( '|.*Cannot resolve a fulfilled promise|');
         $promise->resolve($in);
     }
 
@@ -85,7 +86,8 @@ class PromiseTest extends DataProvider
     {
         $promise = new Promise;
         $promise->resolve('bar');
-        $this->setExpectedExceptionRegExp(AlreadyRejectedException::class, '|.*Cannot reject a fulfilled promise|');
+        $this->expectException(AlreadyRejectedException::class);
+        $this->expectExceptionMessageRegExp('|.*Cannot reject a fulfilled promise|');
         $promise->reject($in);
     }
 
